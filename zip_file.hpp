@@ -22,6 +22,11 @@
 
 #pragma once
 
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
+
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
@@ -5707,3 +5712,8 @@ private:
 };
 
 } // namespace miniz_cpp
+
+
+#if defined(__clang__) || defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
