@@ -2986,13 +2986,25 @@ static void *tdefl_write_image_to_png_file_in_memory(const void *pImage, int w, 
     #ifndef MINIZ_NO_TIME
       #include <utime.h>
     #endif
+    #ifndef MZ_HAVE_FSEEKO
+      #if (defined(_POSIX_C_SOURCE) && (_POSIX_C_SOURCE >= 200112L)) || (defined(_XOPEN_SOURCE) && (_XOPEN_SOURCE >= 500))
+        #define MZ_HAVE_FSEEKO 1
+      #else
+        #define MZ_HAVE_FSEEKO 0
+      #endif
+    #endif
     #define MZ_FILE FILE
     #define MZ_FOPEN(f, m) fopen(f, m)
     #define MZ_FCLOSE fclose
     #define MZ_FREAD fread
     #define MZ_FWRITE fwrite
-    #define MZ_FTELL64 ftello
-    #define MZ_FSEEK64 fseeko
+    #if MZ_HAVE_FSEEKO
+      #define MZ_FTELL64 ftello
+      #define MZ_FSEEK64 fseeko
+    #else
+      #define MZ_FTELL64 ftell
+      #define MZ_FSEEK64 fseek
+    #endif
     #define MZ_FILE_STAT_STRUCT stat
     #define MZ_FILE_STAT stat
     #define MZ_FFLUSH fflush
